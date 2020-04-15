@@ -4,7 +4,7 @@ import numpy as np
 import scipy.io.wavfile as wavfile
 import glob
 
-RANGE = (0,1)
+RANGE = (0,17)
 
 if(not os.path.isdir('norm_audio_train')):
     os.mkdir('norm_audio_train')
