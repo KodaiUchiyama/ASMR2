@@ -9,7 +9,7 @@ frame_path = './frames/'
 output_dir = './face_input'
 invalid_frame_path = 'invalid_frame.txt'
 segment_num_list = 'segment_num_list.csv'
-detect_range = (0,1)
+detect_range = (0,17)
 
 if not os.path.isdir('./face_input'):
     os.mkdir('./face_input')
@@ -78,7 +78,7 @@ for i in range(detect_range[0],detect_range[1]):
             if (not os.path.exists('%s%s' % (frame_path, file_name))):
                 print('cannot find input: ' + '%s%s' % (frame_path, file_name))
                 continue
-            #face_detect(file_name, detector)
+            face_detect(file_name, detector)
         #increment counter
         print("COUNTER : %s"%counter)
         counter+=1

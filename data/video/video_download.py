@@ -56,7 +56,7 @@ def download_video_frames(loc,cat,start_idx,end_idx,rm_video):
     # rm_video   | boolean value for delete video and only keep the frames
 
     avh.mkdir('frames')
-    for i in range(start_idx, end_idx + 1):
+    for i in range(start_idx, end_idx):
         command = 'cd %s;' % loc
         f_name = str(i)
         link = avh.m_link(cat.loc[i, 'link'])
@@ -106,4 +106,4 @@ cat_train = pd.read_csv('../audio/catalog/avspeech_train.csv')
 #avh.generate_frames(loc='video_train',v_name='clip_video_train',start_idx=2,end_idx=4)
 
 # download each video and convert to frames immediately
-download_video_frames(loc='video_train',cat=cat_train,start_idx=0,end_idx=0,rm_video=True)
+download_video_frames(loc='video_train',cat=cat_train,start_idx=0,end_idx=17,rm_video=True)
