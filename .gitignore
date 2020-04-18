@@ -1,0 +1,15 @@
+.DS_Store
+Pipfile.lock
+
+
+data/audio/AV_model_database/
+data/audio/audio_train/
+data/audio/norm_audio_train/
+data/video/face_input/
+data/video/frames/
+data/video/video_train/
+data/video/face1022_emb/
+
+img/
+README.md
+LICENSE
