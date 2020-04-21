@@ -84,7 +84,7 @@ def single_audio_to_npy(audio_path_list,database_repo=DATABASE_REPO_PATH,fix_sr=
     for idx,path in audio_path_list:
         print('\rsingle npy generating... %d'%(((idx+1)/len(audio_path_list))*100),end='')
         data, _ = librosa.load(path, sr=fix_sr)
-        data = utils.fast_stft(data)
+        data = utils.fast_stft_amplitude(data)
         #
         #name = 'single-%05d'%idx
         name = path.rsplit("/",1)[1].split("n")[1].replace(".wav","")

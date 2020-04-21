@@ -88,7 +88,7 @@ def real_imag_shrink(F,dim='new'):
         F_shrink = F[:,::2] + F[:,1::2]*1j
     return F_shrink
 
-def power_law(data,power=0.6):
+def power_law(data,power=0.3):
     # assume input has negative value
     mask = np.zeros(data.shape)
     mask[data>=0] = 1
@@ -97,12 +97,23 @@ def power_law(data,power=0.6):
     data = data*mask
     return data
 
+def sigmoid(x):
+    return 1.0 / (1.0 + np.exp(-x))
+
 def fast_stft(data,power=False,**kwargs):
     # directly transform the wav to the input
     # power law = A**0.3 , to prevent loud audio from overwhelming soft audio
     if power:
         data = power_law(data)
     return real_imag_expand(stft(data))
+
+#振幅スペクトルグラムを取得 griffin lim test
+def fast_stft_amplitude(data,power=False,**kwargs):
+    # directly transform the wav to the input
+    # power law = A**0.3 , to prevent loud audio from overwhelming soft audio
+    if power:
+        data = power_law(data)
+    return sigmoid(np.abs(librosa.stft(data, n_fft=512, hop_length=160, window='hann', center=True)))
 
 def fast_istft(F,power=False,**kwargs):
     # directly transform the frequency domain data to time domain data

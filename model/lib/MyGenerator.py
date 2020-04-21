@@ -1,9 +1,8 @@
 import numpy as np
 import keras
-
 class DataGenerator(keras.utils.Sequence):
     'Generates data for Keras'
-    def __init__(self, filename, database_dir_path, Xdim=(75, 1, 1792), ydim=(298, 257, 2), batch_size=4, shuffle=True):
+    def __init__(self, filename, database_dir_path, Xdim=(75, 1, 1792), ydim=(301, 257), batch_size=4, shuffle=True):
         'Initialization'
         self.filename = filename
         self.Xdim = Xdim
@@ -35,7 +34,7 @@ class DataGenerator(keras.utils.Sequence):
         self.indexes = np.arange(len(self.filename))
         if self.shuffle:
             np.random.shuffle(self.indexes)
-
+    
     def __data_generation(self, filename_temp):
         'Generates data containing batch_size samples'
         # Initialization
@@ -46,7 +45,9 @@ class DataGenerator(keras.utils.Sequence):
         for i, ID in enumerate(filename_temp):
             info = ID.strip().split(' ')
             X[i,] = np.load(self.database_dir_path+'video/face1022_emb/' + info[1])
-            y[i,] = np.load(self.database_dir_path+'audio/AV_model_database/single/' + info[0])
+            y_trans = np.load(self.database_dir_path+'audio/AV_model_database/single/' + info[0])
+            #(257,301)F-Tの順番を(301,257)T-Fに転置
+            y[i,] = y_trans.T
             #ふたりのマスクを予測する
             #for j in range(2):
             #    y[i, :, :, :, j] = np.load(self.database_dir_path+'/crm/' + info[j + 1])
