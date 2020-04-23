@@ -100,6 +100,14 @@ def power_law(data,power=0.3):
 def sigmoid(x):
     return 1.0 / (1.0 + np.exp(-x))
 
+def logit(p):
+    ones = np.ones(p.shape)
+    return np.log(p / (ones - p))
+
+#instead of boxcox, to make the amp distribute more gaussian dist
+def log_dist(p):
+    return np.log(p + 10**-7)
+
 def fast_stft(data,power=False,**kwargs):
     # directly transform the wav to the input
     # power law = A**0.3 , to prevent loud audio from overwhelming soft audio
@@ -113,7 +121,7 @@ def fast_stft_amplitude(data,power=False,**kwargs):
     # power law = A**0.3 , to prevent loud audio from overwhelming soft audio
     if power:
         data = power_law(data)
-    return sigmoid(np.abs(librosa.stft(data, n_fft=512, hop_length=160, window='hann', center=True)))
+    return sigmoid(log_dist(np.abs(librosa.stft(data, n_fft=512, hop_length=160, window='hann', center=True))))
 
 def fast_istft(F,power=False,**kwargs):
     # directly transform the frequency domain data to time domain data
