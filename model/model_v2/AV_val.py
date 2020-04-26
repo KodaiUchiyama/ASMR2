@@ -9,6 +9,7 @@ import numpy as np
 import utils
 import librosa
 import tensorflow as tf
+import retrieval_neighbor
 
 import matplotlib
 from matplotlib import cm
@@ -28,11 +29,17 @@ if not os.path.isdir(dir_path):
 database_path = '../../data/audio/AV_model_database/single/'
 face_path = '../../data/video/face1022_emb/'
 
-# load data
+# load data should be real test files
 testfiles = []
 with open('../../data/AV_log/AVdataset_val.txt', 'r') as f:
     testfiles = f.readlines()
 
+trainfiles = []
+with open('../../data/AV_log/AVdataset_train.txt', 'r') as f:
+    trainfiles = f.readlines()
+
+
+# For predict Spectrogram
 def parse_X_data(line, face_path=face_path):
     parts = line.split() # get each name of file for one testset
     #string
@@ -47,10 +54,9 @@ def parse_X_data(line, face_path=face_path):
     spectrogram_feature = np.load(amp_spectrogram_path)
     face_emb_feature = np.load(file_path)
     #expand dimention, because trained 4 batch size
-    spectrogram_feature_expand = spectrogram_feature[np.newaxis, ...]
     face_emb_feature_expand = face_emb_feature[np.newaxis, ...]
     
-    return name, face_emb_feature_expand, spectrogram_feature_expand
+    return name, face_emb_feature_expand, spectrogram_feature
 
 ##### PLOT RESULTS
 def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
@@ -74,7 +80,7 @@ def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
     #生成されたスペクトログラムと正解値スペクトログラムを比較表示、保存
     # フォルダの作成
     # make output directory
-    folder = 'Predicted_feature/'
+    folder = 'test/'
     if not os.path.exists(folder):
         os.makedirs(folder)
     plt.savefig(folder + "predicted_spectrums-%s.png"%name)  # ../graphs/predicted_spectrums/{lr:0.000597}-{ws:0.000759}/1.png
@@ -85,43 +91,53 @@ def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
 AV_model = load_model(model_path,custom_objects={"tf": tf})
 #print(AV_model.summary())
 counter = 0
-iteration_num = 50
+iteration_num = 1
 if NUM_GPU <= 1:
     for line in testfiles:
+        #テスト回数
+        if counter == iteration_num:
+            print('BREAK')
+            break
+
         name, face_emb_feature, spectrogram_feature = parse_X_data(line)
         predicted_spec = AV_model.predict(face_emb_feature)
         
-        print("sigmoid_array")
-        print("sigmoid_array max")
-        print(predicted_spec.max())
-        print("sigmoid_array min")
-        print(predicted_spec.min())
+        #print("sigmoid_array")
+        #print("sigmoid_array max")
+        #print(predicted_spec.max())
+        #print("sigmoid_array min")
+        #print(predicted_spec.min())
         
-        #spectrogramを描画
-        plot_spectrogram(name,predicted_spec[0,:].T, spectrogram_feature[0,:]) 
+        #raw_data, spectrogramを描画
+        #plot_spectrogram(name,predicted_spec[0,:].T, spectrogram_feature) 
+        
+        #retrieval_the nearest neighbor, spectrogramを描画
+        #retrieve_neighbor(predicted_spec)
+        #args: predicted spectrogram:shape(301,257)
+        retrieved_spectrogram = retrieval_neighbor.retrieve_neighbor(predicted_spec[0,:])
+        plot_spectrogram(name,retrieved_spectrogram.T, spectrogram_feature) 
         
         #sigmoidの逆関数logit関数, log(x+10^-7)のガウス的distributionの逆関数log_dist_inv
-        innormalized_spec = utils.log_dist_inv(utils.logit(predicted_spec[0,:]))
-        #振幅スペクトルに負の値は存在しないから。logit関数の結果から、値が負になるものは0パディングする。（これはoutput layer sigmoidを追加することによって必要なし
-        #innormalized_spec = np.where(innormalized_spec < 0, 0, innormalized_spec)
+        #innormalized_spec = utils.log_dist_inv(utils.logit(predicted_spec[0,:]))
         
-        print("logit_array")
-        print("logit_array max")
-        print(innormalized_spec.max())
-        print("logit_array min")
-        print(innormalized_spec.min())
+        #retrieved_specを元のスケールに戻す
+        innormalized_spec = utils.log_dist_inv(utils.logit(retrieved_spectrogram))
+        
+        #print("logit_array")
+        #print("logit_array max")
+        #print(innormalized_spec.max())
+        #print("logit_array min")
+        #print(innormalized_spec.min())
         innormalized_spec = innormalized_spec.T #T-Fの順番をF-Tに修正、griffin limで位相復元のため 
         
         #Grillin Lim phase generatiion
         y_inv = librosa.griffinlim(innormalized_spec, hop_length=160, window='hann', center=True) 
         
-        filename = dir_path+name+'.wav'
+        #filename = dir_path+name+'.wav'
+        filename = 'test/'+name+'.wav'
 
-        #テスト回数
         wavfile.write(filename, 16000, y_inv)
-        if counter == iteration_num:
-            print('BREAK')
-            break
+        
         counter += 1
 #if NUM_GPU > 1:
 #    parallel_model = ModelMGPU(AV_model,NUM_GPU)
