@@ -102,11 +102,15 @@ def sigmoid(x):
 
 def logit(p):
     ones = np.ones(p.shape)
+    ones = ones + 10**-7
     return np.log(p / (ones - p))
 
 #instead of boxcox, to make the amp distribute more gaussian dist
 def log_dist(p):
     return np.log(p + 10**-7)
+
+def log_dist_inv(p):
+    return np.exp(p)-10**-7
 
 def fast_stft(data,power=False,**kwargs):
     # directly transform the wav to the input

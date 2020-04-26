@@ -20,7 +20,8 @@ people_num = 2
 NUM_GPU = 1
 
 # PATH
-model_path = './saved_AV_models/AVmodel-8p-016-0.00370.h5'
+model_path = './saved_AV_models/AVmodel-14p-025-0.01321.h5'
+#model_path = './saved_AV_models/AVmodel-15p-011-0.06611.h5'
 dir_path = './pred/'
 if not os.path.isdir(dir_path):
     os.mkdir(dir_path)
@@ -54,14 +55,14 @@ def parse_X_data(line, face_path=face_path):
 ##### PLOT RESULTS
 def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
     plt.subplot(2, 1, 1)
-    plt.imshow(innormalized_spec, aspect='auto',vmin=0.0,vmax=40.0)# (pred_idx:end_idx , 42) > (42 , pred_idx:end_idx)
+    plt.imshow(innormalized_spec, aspect='auto',vmin=0.0,vmax=1.0)# (pred_idx:end_idx , 42) > (42 , pred_idx:end_idx)
     plt.title('Predicted feature')
     plt.ylabel('Frequency bands')
     plt.xlabel('Time (frames)')
     plt.colorbar()
 
     plt.subplot(2, 1, 2)
-    plt.imshow(spectrogram_feature, aspect='auto', vmin=-0.0, vmax=40.0)
+    plt.imshow(spectrogram_feature, aspect='auto', vmin=-0.0, vmax=1.0)
     plt.title('Ground Truth')
     plt.ylabel('Frequency bands')
     plt.xlabel('Time (frames)')
@@ -76,13 +77,15 @@ def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
     folder = 'Predicted_feature/'
     if not os.path.exists(folder):
         os.makedirs(folder)
-    plt.savefig(folder + "predicted_spectrums.png")  # ../graphs/predicted_spectrums/{lr:0.000597}-{ws:0.000759}/1.png
+    plt.savefig(folder + "predicted_spectrums-%s.png"%name)  # ../graphs/predicted_spectrums/{lr:0.000597}-{ws:0.000759}/1.png
     plt.close()
 
 
 # predict data
 AV_model = load_model(model_path,custom_objects={"tf": tf})
-print(AV_model.summary())
+#print(AV_model.summary())
+counter = 0
+iteration_num = 50
 if NUM_GPU <= 1:
     for line in testfiles:
         name, face_emb_feature, spectrogram_feature = parse_X_data(line)
@@ -93,25 +96,33 @@ if NUM_GPU <= 1:
         print(predicted_spec.max())
         print("sigmoid_array min")
         print(predicted_spec.min())
-        #sigmoidの逆関数logit関数
-        innormalized_spec = utils.logit(predicted_spec[0,:]) 
-        #振幅スペクトルに負の値は存在しないから。logit関数の結果から、値が負になるものは0パディングする。
-        innormalized_spec = np.where(innormalized_spec < 0, 0, innormalized_spec)
+        
+        #spectrogramを描画
+        plot_spectrogram(name,predicted_spec[0,:].T, spectrogram_feature[0,:]) 
+        
+        #sigmoidの逆関数logit関数, log(x+10^-7)のガウス的distributionの逆関数log_dist_inv
+        innormalized_spec = utils.log_dist_inv(utils.logit(predicted_spec[0,:]))
+        #振幅スペクトルに負の値は存在しないから。logit関数の結果から、値が負になるものは0パディングする。（これはoutput layer sigmoidを追加することによって必要なし
+        #innormalized_spec = np.where(innormalized_spec < 0, 0, innormalized_spec)
+        
         print("logit_array")
         print("logit_array max")
         print(innormalized_spec.max())
         print("logit_array min")
         print(innormalized_spec.min())
         innormalized_spec = innormalized_spec.T #T-Fの順番をF-Tに修正、griffin limで位相復元のため 
-        #spectrogramを描画
-        plot_spectrogram(name, innormalized_spec, utils.logit(spectrogram_feature[0,:]).T) 
-        exit()
+        
         #Grillin Lim phase generatiion
         y_inv = librosa.griffinlim(innormalized_spec, hop_length=160, window='hann', center=True) 
         
         filename = dir_path+name+'.wav'
-        wavfile.write(filename, 16000, y_inv)
 
+        #テスト回数
+        wavfile.write(filename, 16000, y_inv)
+        if counter == iteration_num:
+            print('BREAK')
+            break
+        counter += 1
 #if NUM_GPU > 1:
 #    parallel_model = ModelMGPU(AV_model,NUM_GPU)
 #    for line in testfiles:
