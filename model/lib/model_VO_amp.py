@@ -92,16 +92,22 @@ def VO_model():
     AVfusion = TimeDistributed(Flatten())(conv7)
     print('AVfusion:', AVfusion.shape)
 
-    lstm = Bidirectional(LSTM(400,input_shape=(301,256),return_sequences=True),merge_mode='sum')(AVfusion)
+    lstm = Bidirectional(LSTM(400, input_shape=(301,256),return_sequences=True),merge_mode='sum')(AVfusion)
     print('lstm:', lstm.shape)
-
+    
+    DROPOUT = 0.2
     fc1 = Dense(600, name="fc1", activation='relu', kernel_initializer=he_normal(seed=27))(lstm)
     print('fc1:', fc1.shape)
+    fc1 = Dropout(DROPOUT)(fc1)
+    
     fc2 = Dense(600, name="fc2", activation='relu', kernel_initializer=he_normal(seed=42))(fc1)
     print('fc2:', fc2.shape)
+    fc2 = Dropout(DROPOUT)(fc2)
+
     fc3 = Dense(600, name="fc3", activation='relu', kernel_initializer=he_normal(seed=65))(fc2)
     print('fc3:', fc3.shape)
-
+    fc3 = Dropout(DROPOUT)(fc3)
+    
     complex_mask = Dense(257 * 1, name="complex_mask", kernel_initializer=glorot_uniform(seed=87))(fc3)
     print('complex_mask:', complex_mask.shape)
 
