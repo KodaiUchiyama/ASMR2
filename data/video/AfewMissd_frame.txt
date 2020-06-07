@@ -1,215 +1,245 @@
-video 0, segment 6 has 1 invalid frames
-video 0, segment 17 has 1 invalid frames
-video 0, segment 33 has 1 invalid frames
-video 0, segment 52 has 1 invalid frames
-video 0, segment 88 has 1 invalid frames
-video 0, segment 100 has 1 invalid frames
-video 0, segment 131 has 1 invalid frames
-video 0, segment 139 has 2 invalid frames
-video 0, segment 143 has 2 invalid frames
-video 1, segment 56 has 1 invalid frames
-video 1, segment 60 has 2 invalid frames
-video 1, segment 68 has 1 invalid frames
-video 1, segment 100 has 2 invalid frames
-video 1, segment 113 has 1 invalid frames
-video 1, segment 123 has 2 invalid frames
-video 1, segment 125 has 1 invalid frames
-video 1, segment 131 has 1 invalid frames
-video 1, segment 153 has 2 invalid frames
-video 1, segment 154 has 1 invalid frames
-video 1, segment 165 has 1 invalid frames
-video 1, segment 180 has 2 invalid frames
-video 1, segment 197 has 2 invalid frames
-video 1, segment 206 has 1 invalid frames
-video 1, segment 214 has 1 invalid frames
-video 1, segment 223 has 1 invalid frames
-video 2, segment 14 has 2 invalid frames
-video 2, segment 15 has 1 invalid frames
-video 2, segment 16 has 2 invalid frames
-video 2, segment 24 has 1 invalid frames
-video 2, segment 25 has 1 invalid frames
-video 2, segment 29 has 2 invalid frames
-video 2, segment 30 has 1 invalid frames
-video 2, segment 47 has 1 invalid frames
-video 2, segment 59 has 2 invalid frames
-video 2, segment 68 has 2 invalid frames
-video 2, segment 72 has 1 invalid frames
-video 2, segment 91 has 1 invalid frames
-video 2, segment 103 has 1 invalid frames
-video 2, segment 104 has 1 invalid frames
-video 2, segment 105 has 1 invalid frames
-video 2, segment 109 has 1 invalid frames
-video 2, segment 112 has 1 invalid frames
-video 2, segment 144 has 2 invalid frames
-video 2, segment 166 has 1 invalid frames
-video 2, segment 168 has 1 invalid frames
-video 2, segment 169 has 2 invalid frames
-video 2, segment 172 has 1 invalid frames
-video 2, segment 178 has 1 invalid frames
-video 2, segment 179 has 2 invalid frames
-video 2, segment 180 has 2 invalid frames
-video 2, segment 188 has 1 invalid frames
-video 2, segment 189 has 2 invalid frames
-video 2, segment 193 has 1 invalid frames
-video 2, segment 196 has 2 invalid frames
-video 2, segment 201 has 2 invalid frames
-video 3, segment 9 has 2 invalid frames
-video 3, segment 10 has 2 invalid frames
-video 3, segment 18 has 2 invalid frames
-video 3, segment 22 has 2 invalid frames
-video 3, segment 45 has 2 invalid frames
-video 3, segment 56 has 1 invalid frames
-video 3, segment 58 has 1 invalid frames
-video 3, segment 62 has 2 invalid frames
-video 3, segment 80 has 2 invalid frames
-video 3, segment 108 has 1 invalid frames
-video 3, segment 115 has 2 invalid frames
-video 3, segment 119 has 1 invalid frames
-video 3, segment 128 has 1 invalid frames
-video 3, segment 132 has 1 invalid frames
-video 3, segment 137 has 1 invalid frames
-video 3, segment 138 has 2 invalid frames
-video 3, segment 148 has 1 invalid frames
-video 3, segment 156 has 2 invalid frames
-video 4, segment 25 has 1 invalid frames
-video 4, segment 32 has 2 invalid frames
-video 4, segment 52 has 1 invalid frames
-video 4, segment 83 has 2 invalid frames
-video 4, segment 85 has 2 invalid frames
-video 4, segment 87 has 1 invalid frames
-video 4, segment 97 has 2 invalid frames
-video 4, segment 100 has 1 invalid frames
-video 4, segment 112 has 2 invalid frames
-video 4, segment 143 has 1 invalid frames
-video 4, segment 150 has 1 invalid frames
-video 4, segment 160 has 1 invalid frames
-video 4, segment 198 has 2 invalid frames
-video 4, segment 199 has 1 invalid frames
-video 4, segment 201 has 1 invalid frames
-video 5, segment 10 has 2 invalid frames
-video 5, segment 32 has 1 invalid frames
-video 5, segment 40 has 2 invalid frames
-video 5, segment 69 has 1 invalid frames
-video 5, segment 70 has 2 invalid frames
-video 5, segment 88 has 1 invalid frames
-video 5, segment 98 has 1 invalid frames
-video 5, segment 157 has 2 invalid frames
-video 5, segment 163 has 2 invalid frames
-video 5, segment 186 has 2 invalid frames
-video 5, segment 191 has 2 invalid frames
-video 5, segment 192 has 1 invalid frames
-video 5, segment 198 has 1 invalid frames
-video 6, segment 1 has 1 invalid frames
-video 6, segment 13 has 1 invalid frames
-video 6, segment 22 has 1 invalid frames
-video 6, segment 46 has 1 invalid frames
-video 6, segment 70 has 1 invalid frames
-video 6, segment 79 has 1 invalid frames
-video 6, segment 89 has 1 invalid frames
-video 6, segment 106 has 1 invalid frames
-video 6, segment 108 has 2 invalid frames
-video 6, segment 109 has 1 invalid frames
-video 6, segment 111 has 1 invalid frames
-video 6, segment 112 has 1 invalid frames
-video 6, segment 125 has 2 invalid frames
-video 6, segment 127 has 1 invalid frames
-video 6, segment 128 has 2 invalid frames
-video 6, segment 140 has 2 invalid frames
-video 7, segment 9 has 2 invalid frames
-video 7, segment 45 has 2 invalid frames
-video 7, segment 46 has 1 invalid frames
-video 7, segment 49 has 1 invalid frames
-video 7, segment 86 has 2 invalid frames
-video 7, segment 101 has 1 invalid frames
-video 7, segment 106 has 2 invalid frames
-video 7, segment 127 has 2 invalid frames
-video 7, segment 146 has 1 invalid frames
-video 7, segment 149 has 1 invalid frames
-video 7, segment 152 has 2 invalid frames
-video 7, segment 162 has 1 invalid frames
-video 7, segment 166 has 1 invalid frames
-video 7, segment 181 has 1 invalid frames
-video 7, segment 183 has 2 invalid frames
-video 8, segment 3 has 1 invalid frames
-video 8, segment 9 has 1 invalid frames
-video 8, segment 12 has 1 invalid frames
-video 8, segment 24 has 1 invalid frames
-video 8, segment 39 has 1 invalid frames
-video 8, segment 41 has 1 invalid frames
-video 8, segment 74 has 1 invalid frames
-video 8, segment 81 has 2 invalid frames
-video 8, segment 89 has 2 invalid frames
-video 8, segment 112 has 1 invalid frames
-video 9, segment 61 has 2 invalid frames
-video 9, segment 86 has 2 invalid frames
-video 9, segment 91 has 1 invalid frames
-video 9, segment 107 has 1 invalid frames
-video 9, segment 116 has 2 invalid frames
-video 9, segment 160 has 1 invalid frames
-video 10, segment 48 has 2 invalid frames
-video 10, segment 57 has 1 invalid frames
-video 10, segment 60 has 1 invalid frames
-video 10, segment 92 has 1 invalid frames
-video 10, segment 110 has 1 invalid frames
-video 10, segment 133 has 1 invalid frames
-video 10, segment 137 has 2 invalid frames
-video 10, segment 140 has 1 invalid frames
-video 12, segment 4 has 2 invalid frames
-video 12, segment 6 has 2 invalid frames
-video 12, segment 13 has 1 invalid frames
-video 12, segment 62 has 1 invalid frames
-video 12, segment 63 has 1 invalid frames
-video 12, segment 87 has 2 invalid frames
-video 12, segment 92 has 2 invalid frames
-video 12, segment 101 has 2 invalid frames
-video 12, segment 107 has 2 invalid frames
-video 12, segment 117 has 1 invalid frames
-video 12, segment 134 has 2 invalid frames
-video 12, segment 142 has 2 invalid frames
-video 12, segment 144 has 2 invalid frames
-video 13, segment 11 has 1 invalid frames
-video 13, segment 29 has 2 invalid frames
-video 13, segment 45 has 2 invalid frames
-video 13, segment 47 has 1 invalid frames
-video 13, segment 51 has 2 invalid frames
-video 13, segment 69 has 2 invalid frames
-video 13, segment 72 has 1 invalid frames
-video 13, segment 81 has 1 invalid frames
-video 13, segment 82 has 2 invalid frames
-video 13, segment 83 has 2 invalid frames
-video 13, segment 101 has 1 invalid frames
-video 13, segment 125 has 2 invalid frames
-video 13, segment 130 has 1 invalid frames
-video 13, segment 154 has 1 invalid frames
-video 14, segment 20 has 1 invalid frames
-video 14, segment 46 has 1 invalid frames
-video 14, segment 66 has 1 invalid frames
-video 14, segment 87 has 2 invalid frames
-video 14, segment 88 has 1 invalid frames
-video 15, segment 27 has 1 invalid frames
-video 15, segment 67 has 1 invalid frames
-video 15, segment 87 has 1 invalid frames
-video 15, segment 101 has 2 invalid frames
-video 15, segment 108 has 1 invalid frames
-video 15, segment 126 has 1 invalid frames
-video 15, segment 127 has 1 invalid frames
-video 15, segment 145 has 2 invalid frames
-video 15, segment 146 has 1 invalid frames
-video 15, segment 167 has 2 invalid frames
-video 15, segment 178 has 1 invalid frames
-video 15, segment 181 has 1 invalid frames
-video 16, segment 10 has 1 invalid frames
-video 16, segment 20 has 2 invalid frames
-video 16, segment 60 has 2 invalid frames
-video 16, segment 63 has 1 invalid frames
-video 16, segment 71 has 1 invalid frames
-video 16, segment 83 has 1 invalid frames
-video 16, segment 90 has 1 invalid frames
-video 16, segment 103 has 1 invalid frames
-video 16, segment 106 has 1 invalid frames
-video 16, segment 109 has 1 invalid frames
-video 16, segment 113 has 1 invalid frames
-video 16, segment 119 has 2 invalid frames
-video 16, segment 137 has 2 invalid frames
-video 16, segment 164 has 2 invalid frames
-video 16, segment 165 has 1 invalid frames
+0,6
+0,17
+0,33
+0,52
+0,88
+0,100
+0,131
+1,56
+1,68
+1,113
+1,125
+1,131
+1,154
+1,165
+1,206
+1,214
+1,223
+2,15
+2,24
+2,25
+2,30
+2,47
+2,72
+2,91
+2,103
+2,104
+2,105
+2,109
+2,112
+2,166
+2,168
+2,172
+2,178
+2,188
+2,193
+3,56
+3,58
+3,108
+3,119
+3,128
+3,132
+3,137
+3,148
+4,25
+4,52
+4,87
+4,100
+4,143
+4,150
+4,160
+4,199
+4,201
+5,32
+5,69
+5,88
+5,98
+5,192
+5,198
+6,1
+6,13
+6,22
+6,46
+6,70
+6,79
+6,89
+6,106
+6,109
+6,111
+6,112
+6,127
+7,46
+7,49
+7,101
+7,146
+7,149
+7,162
+7,166
+7,181
+8,3
+8,9
+8,12
+8,24
+8,39
+8,41
+8,74
+8,112
+9,91
+9,107
+9,160
+10,57
+10,60
+10,92
+10,110
+10,133
+10,140
+12,13
+12,62
+12,63
+12,117
+13,11
+13,47
+13,72
+13,81
+13,101
+13,130
+13,154
+14,20
+14,46
+14,66
+14,88
+15,27
+15,67
+15,87
+15,108
+15,126
+15,127
+15,146
+15,178
+15,181
+16,10
+16,63
+16,71
+16,83
+16,90
+16,103
+16,106
+16,109
+16,113
+16,165
+17,186
+17,188
+17,197
+17,203
+18,11
+18,36
+18,64
+18,90
+18,140
+18,141
+18,149
+18,156
+18,172
+19,33
+19,34
+19,41
+19,61
+19,72
+19,100
+19,130
+19,131
+19,154
+20,80
+20,104
+20,112
+20,116
+20,154
+21,0
+21,37
+21,77
+21,84
+21,106
+21,129
+21,197
+21,237
+22,3
+22,9
+22,12
+22,24
+22,39
+22,41
+22,74
+22,112
+23,36
+23,68
+23,78
+23,85
+24,25
+24,53
+24,65
+24,85
+24,105
+24,112
+24,155
+24,170
+26,36
+26,38
+26,87
+27,43
+27,177
+28,1
+28,28
+28,53
+28,88
+29,13
+29,15
+29,33
+29,45
+29,55
+29,67
+29,144
+29,151
+29,153
+29,185
+30,14
+30,16
+30,33
+30,45
+30,50
+30,53
+30,68
+30,81
+30,96
+31,0
+31,5
+31,33
+31,34
+31,56
+31,58
+31,68
+31,84
+31,174
+32,0
+32,5
+32,6
+32,9
+32,13
+32,18
+32,21
+32,25
+32,44
+32,61
+32,81
+32,123
+32,154
+32,185
+32,207
+33,11
+33,12
+33,19
+33,67
+33,102
+33,144
+34,136
+34,149
+34,162
