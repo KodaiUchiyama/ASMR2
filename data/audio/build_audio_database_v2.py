@@ -12,11 +12,12 @@ import math
 import scipy.io.wavfile as wavfile
 
 # Parameter
-SAMPLE_RANGE = (0,17) # data usage to generate database
-WAV_REPO_PATH = os.path.expanduser("./norm_audio_train")
-DATABASE_REPO_PATH = 'AV_model_database'
-FRAME_LOG_PATH = '../video/valid_frame.txt'
-segment_num_list = pd.read_csv('../video/segment_num_list.csv')
+SAMPLE_RANGE = (0,2) # data usage to generate database
+WAV_REPO_PATH = os.path.expanduser("./norm_audio_test")
+WAV_FILE_NAME = "trim_audio_train"
+DATABASE_REPO_PATH = 'AV_model_database_test'
+FRAME_LOG_PATH = '../video/valid_frame_test.txt'
+segment_num_list = pd.read_csv('../video/segment_num_list_test.csv')
 NUM_SPEAKER = 2
 MAX_NUM_SAMPLE = 50000
 
@@ -71,7 +72,7 @@ def generate_path_list(sample_range=SAMPLE_RANGE,repo_path=WAV_REPO_PATH,frame_p
         segment_num = int(segment_num_list.loc[i,'segment']) #i行目, segment列を取得 
         #print(segment_num)
         for j in range(segment_num + 1): #ex)segment_numは0-162の162を表す 
-            path = repo_path + '/trim_audio_train%d-%d.wav'%(i,j) #trim_audio_train0-1.wav
+            path = repo_path + '/%s%d-%d.wav'%(WAV_FILE_NAME,i,j) #trim_audio_train0-1.wav
             frame_index = "%d-%d"%(i,j)
             if os.path.exists(path) and (frame_index in frame_set):
                 audio_path_list.append((index_counter,path))
@@ -258,7 +259,7 @@ if __name__ == "__main__":
 
     #dataset_log_path ='%s/dataset.txt'%DATABASE_REPO_PATH
     #single音声のみのdatasetログファイル
-    dataset_log_path ='%s/single_TF.txt'%DATABASE_REPO_PATH
-    train_test_split(dataset_log_path,data_range=[0,MAX_NUM_SAMPLE])
+    #dataset_log_path ='%s/single_TF.txt'%DATABASE_REPO_PATH
+    #train_test_split(dataset_log_path,data_range=[0,MAX_NUM_SAMPLE])
 
 

@@ -16,11 +16,14 @@ CKPT = 0
 HDF5 = 1
 #MODEL_PATH = 'FaceNet_keras/facenet_keras.h5'
 MODEL_PATH = '/home/kody.uchiyama/keras-facenet/model/facenet_keras.h5'
-VALID_FRAME_LOG_PATH = '../../data/video/valid_frame.txt'
-FACE_INPUT_PATH = '../../data/video/face_input/'
+#input
+VALID_FRAME_LOG_PATH = '../../data/video/valid_frame_test.txt'
+FACE_INPUT_PATH = '../../data/video/face_input_test/'
+#output
+OUTPUT_TXT_FILE='faceemb_dataset_test.txt'
+SAVE_PATH = './face1022_emb_test/' 
 
 data = np.random.randint(256,size=(1,160,160,3),dtype='int32')
-
 
 ###############
 #graph_path = 'FaceNet_new/20180402-114759.pb'
@@ -41,9 +44,8 @@ if CKPT:
         #print(sess.run('embeddings:0', feed_dict={'batch_size:0': data, 'phase_train:0': False}))
 
 if HDF5:
-    save_path = './face1022_emb/'
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
+    if not os.path.exists(SAVE_PATH):
+        os.makedirs(SAVE_PATH)
 
     model = load_model(MODEL_PATH)
     model.summary()
@@ -78,8 +80,8 @@ if HDF5:
         npname = '%s_face_emb.npy'%frame_index
         print(npname)
 
-        np.save(save_path + npname, embtmp)
-        with open('faceemb_dataset.txt', 'a') as d:
+        np.save(SAVE_PATH + npname, embtmp)
+        with open(OUTPUT_TXT_FILE, 'a') as d:
             d.write(npname + '\n')
 
 

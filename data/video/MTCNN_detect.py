@@ -4,15 +4,15 @@ import pandas as pd
 import os
 import glob
 
-cat_train = pd.read_csv('../audio/catalog/avspeech_train.csv')
-frame_path = './frames/'
-output_dir = './face_input'
-invalid_frame_path = 'invalid_frame.txt'
-segment_num_list = 'segment_num_list.csv'
-detect_range = (0,17)
+cat_train = pd.read_csv('../audio/catalog/avspeech_train.csv')#not using
+frame_path = './frames_test/'
+output_dir = './face_input_test'
+#invalid_frame_path = 'invalid_frame2.txt'
+segment_num_list = 'segment_num_list_test.csv'
+detect_range = (0,2)
 
-if not os.path.isdir('./face_input'):
-    os.mkdir('./face_input')
+if not os.path.isdir(output_dir):
+    os.mkdir(output_dir)
 
 def bounding_box_check(faces):
     # check the center
@@ -48,9 +48,9 @@ def face_detect(file,detector,frame_path=frame_path,cat_train=cat_train):
     if(len(faces)==0):
         print('no face detect: '+file)
         #顔が認識できなかったファイルをログに出力
-        with open(invalid_frame_path,'a') as f:
-            f.write(file+'\n')
-        return #no face
+        #with open(invalid_frame_path,'a') as f:
+        #    f.write(file+'\n')
+        #return #no face
     #bounding_box = bounding_box_check(faces,x,y)
     bounding_box = bounding_box_check(faces)
     if(bounding_box == None):
@@ -71,7 +71,7 @@ for i in range(detect_range[0],detect_range[1]):
     # "{index}-"で始まるファイルのみを取得
     counter = 0
     #segment_video_frame_list = glob.glob('frames/%s-%s-*'%(i,counter))
-    while len(glob.glob('frames/%s-%s-*'%(i,counter))) > 0:
+    while len(glob.glob('%s%s-%s-*'%(frame_path,i,counter))) > 0:
         #0-1,0-2,,のセグメントの数ループ
         for j in range(1,76):
             file_name = "%s-%s-%02d.jpg"%(i ,counter ,j)#ex)0-0-57.jpg

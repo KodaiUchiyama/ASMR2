@@ -1,10 +1,10 @@
 import os, glob
 import pandas as pd
-inspect_dir = 'face_input'
-inspect_range = (0,35)
+inspect_dir = 'face_input_test'
+inspect_range = (0,2)
 #valid_frame_path = 'valid_frame.txt'
-AfewMissed_frame_path = 'AfewMissd_frame.txt'
-segment_num_list = pd.read_csv('segment_num_list.csv')
+AfewMissed_frame_path = 'AfewMissd_frame_test.txt'
+segment_num_list = pd.read_csv('segment_num_list_test.csv')
 
 #face画像はあるかどうかをbooleanで返す
 def check_frame(idx,segment,frame,dir=inspect_dir):
@@ -38,7 +38,7 @@ for i in range(inspect_range[0],inspect_range[1]):
             #print("video %s, segment %s has %s invalid frames"%(i,counter,invalid_frame_counter))
             if(invalid_frame_counter == 1):
                 with open(AfewMissed_frame_path,'a') as f:
-                    line = "video %s, segment %s has %s invalid frames"%(i,counter,invalid_frame_counter)
+                    line = "%s,%s"%(i,counter)
                     f.write(line+'\n')
             #if valid:
             #    with open(valid_frame_path,'a') as f:

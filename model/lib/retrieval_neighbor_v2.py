@@ -5,8 +5,9 @@ import sys
 import os
 import numpy as np
 
-# PATH
+# PATH Retrieveされるトレー二ングデータのファイル参照
 database_path = '../../data/audio/AV_model_database/single/'
+#database_path = '../../data/audio/AV_model_database_test/single/'
 
 # load data
 trainfiles = []

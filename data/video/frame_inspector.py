@@ -1,10 +1,10 @@
 import os, glob
 import pandas as pd
-inspect_dir = 'face_input'
-inspect_range = (0,17)
-valid_frame_path = 'valid_frame.txt'
-AfewMissed_frame_path = 'AfewMissd_frame.txt'
-segment_num_list = pd.read_csv('segment_num_list.csv')
+inspect_dir = 'face_input_test'
+inspect_range = (0,2)
+valid_frame_path = 'valid_frame_test.txt'
+#AfewMissed_frame_path = 'AfewMissd_frame.txt'
+segment_num_list = pd.read_csv('segment_num_list_test.csv')
 
 #face画像はあるかどうかをbooleanで返す
 def check_frame(idx,segment,frame,dir=inspect_dir):
@@ -18,6 +18,7 @@ for i in range(inspect_range[0],inspect_range[1]):
     #add "id,segment" at the head of segment_num_list_csv
     segment_num = segment_num_list.loc[i,'segment']
     
+    print('processing: video %s'%i)
     #if(len(glob.glob(inspect_dir+'/frame_%s-%s_*'%(i,counter))) > 0):
     while counter <= segment_num:
         #no segment at the video
@@ -26,7 +27,7 @@ for i in range(inspect_range[0],inspect_range[1]):
         else:
             valid = True
             invalid_frame_counter = 0
-            print('processing video %s, segment %s'%(i,counter))
+            #print('processing video %s, segment %s'%(i,counter))
             for j in range(1,76):
                 if(check_frame(i,counter,j)==False):
                     #invalidなフレームを削除
@@ -38,10 +39,10 @@ for i in range(inspect_range[0],inspect_range[1]):
                     #print('frame %s is not valid'%i)
                     #break
             #print("video %s, segment %s has %s invalid frames"%(i,counter,invalid_frame_counter))
-            if(invalid_frame_counter == 2 or invalid_frame_counter == 1):
-                with open(AfewMissed_frame_path,'a') as f:
-                    line = "video %s, segment %s has %s invalid frames"%(i,counter,invalid_frame_counter)
-                    f.write(line+'\n')
+            #if(invalid_frame_counter == 2 or invalid_frame_counter == 1):
+            #    with open(AfewMissed_frame_path,'a') as f:
+            #        line = "video %s, segment %s has %s invalid frames"%(i,counter,invalid_frame_counter)
+            #        f.write(line+'\n')
             if valid:
                 with open(valid_frame_path,'a') as f:
                     frame_name = "frame_%d-%d"%(i,counter)

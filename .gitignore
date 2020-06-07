@@ -3,19 +3,26 @@ Pipfile.lock
 
 
 data/audio/AV_model_database/
+data/audio/AV_model_database_test/
 data/audio/AV_model_database_not_comp/
 data/audio/AV_model_database_power_law_comped
 data/audio/AV_model_database_sigmoid
 data/audio/AV_model_database_bak
 data/audio/audio_train/
+data/audio/audio_test/
 data/audio/norm_audio_train/
+data/audio/norm_audio_test/
 data/video/face_input/
+data/video/face_input_test/
 data/video/face_input_bak/
 data/video/face_input2/
 data/video/frames/
+data/video/frames_test/
 data/video/frames2/
 data/video/video_train/
+data/video/video_test/
 data/video/face1022_emb/
+data/video/face1022_emb_test/
 data/video/face1022_emb_bak/
 
 model/model_v2/Predicted_feature/

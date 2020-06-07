@@ -47,10 +47,12 @@ def m_audio(loc,name,cat,start_idx,end_idx):
         os.system(command)
 
 #dataset csv file
-cat_train = pd.read_csv('catalog/avspeech_train.csv')
-#cat_test = pd.read_csv('catalog/avspeech_test.csv')
+#cat_train = pd.read_csv('catalog/avspeech_train.csv')
+cat_test = pd.read_csv('catalog/avspeech_test.csv')
 
 # create 80000-90000 audios data from 290K
-avh.mkdir('audio_train')
-m_audio('audio_train','audio_train',cat_train,0,17)
+#avh.mkdir('audio_train')
+avh.mkdir('audio_test')
+#m_audio('audio_train','audio_train',cat_train,0,35)
+m_audio('audio_test','audio_test',cat_test,0,2)
 

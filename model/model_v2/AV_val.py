@@ -9,7 +9,7 @@ import numpy as np
 import utils
 import librosa
 import tensorflow as tf
-import retrieval_neighbor
+import retrieval_neighbor_v2
 
 import matplotlib
 from matplotlib import cm
@@ -21,17 +21,22 @@ people_num = 2
 NUM_GPU = 1
 
 # PATH
-model_path = './saved_AV_models/AVmodel-14p-025-0.01321.h5'
+#model_path = './saved_AV_models/AVmodel-14p-025-0.01321.h5'
+model_path = './saved_AV_models/AVmodel-17p-022-0.01356.h5'
 #model_path = './saved_AV_models/AVmodel-15p-011-0.06611.h5'
-dir_path = './pred/'
+
+#dir_path = './Predicted_wav/'
+dir_path = './Retrieved_predicted_wav/'
 if not os.path.isdir(dir_path):
     os.mkdir(dir_path)
-database_path = '../../data/audio/AV_model_database/single/'
-face_path = '../../data/video/face1022_emb/'
+
+database_path = '../../data/audio/AV_model_database_test/single/'
+face_path = '../../data/video/face1022_emb_test/'
 
 # load data should be real test files
 testfiles = []
-with open('../../data/AV_log/AVdataset_val.txt', 'r') as f:
+#with open('../../data/AV_log/AVdataset_val_video012.txt', 'r') as f:
+with open('../../data/AV_log/AVdataset_test.txt', 'r') as f:
     testfiles = f.readlines()
 
 trainfiles = []
@@ -80,7 +85,8 @@ def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
     #生成されたスペクトログラムと正解値スペクトログラムを比較表示、保存
     # フォルダの作成
     # make output directory
-    folder = 'test/'
+    folder = 'Retrieved_predicted_feature/'
+    #folder = 'Predicted_feature/'
     if not os.path.exists(folder):
         os.makedirs(folder)
     plt.savefig(folder + "predicted_spectrums-%s.png"%name)  # ../graphs/predicted_spectrums/{lr:0.000597}-{ws:0.000759}/1.png
@@ -91,9 +97,11 @@ def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
 AV_model = load_model(model_path,custom_objects={"tf": tf})
 #print(AV_model.summary())
 counter = 0
-iteration_num = 1
+iteration_num = 200
 if NUM_GPU <= 1:
     for line in testfiles:
+        print('processing : %s'%line)
+        
         #テスト回数
         if counter == iteration_num:
             print('BREAK')
@@ -108,19 +116,19 @@ if NUM_GPU <= 1:
         #print("sigmoid_array min")
         #print(predicted_spec.min())
         
-        #raw_data, spectrogramを描画
-        #plot_spectrogram(name,predicted_spec[0,:].T, spectrogram_feature) 
+        #A# raw_data, spectrogramを描画
+        #plot_spectrogram(name, predicted_spec[0,:].T, spectrogram_feature) 
         
-        #retrieval_the nearest neighbor, spectrogramを描画
+        #B# retrieval_the nearest neighbor, spectrogramを描画
         #retrieve_neighbor(predicted_spec)
         #args: predicted spectrogram:shape(301,257)
-        retrieved_spectrogram = retrieval_neighbor.retrieve_neighbor(predicted_spec[0,:])
+        retrieved_spectrogram = retrieval_neighbor_v2.retrieve_neighbor(predicted_spec[0,:])
         plot_spectrogram(name,retrieved_spectrogram.T, spectrogram_feature) 
         
-        #sigmoidの逆関数logit関数, log(x+10^-7)のガウス的distributionの逆関数log_dist_inv
+        #A# sigmoidの逆関数logit関数, log(x+10^-7)のガウス的distributionの逆関数log_dist_inv
         #innormalized_spec = utils.log_dist_inv(utils.logit(predicted_spec[0,:]))
         
-        #retrieved_specを元のスケールに戻す
+        #B# retrieved_specを元のスケールに戻す
         innormalized_spec = utils.log_dist_inv(utils.logit(retrieved_spectrogram))
         
         #print("logit_array")
@@ -133,8 +141,8 @@ if NUM_GPU <= 1:
         #Grillin Lim phase generatiion
         y_inv = librosa.griffinlim(innormalized_spec, hop_length=160, window='hann', center=True) 
         
-        #filename = dir_path+name+'.wav'
-        filename = 'test/'+name+'.wav'
+        filename = dir_path+name+'.wav'
+        #filename = 'test_euc/'+name+'.wav'
 
         wavfile.write(filename, 16000, y_inv)
         
