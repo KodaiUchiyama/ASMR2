@@ -48,12 +48,68 @@ class DataGenerator(keras.utils.Sequence):
             y_trans = np.load(self.database_dir_path+'audio/AV_model_database/single/' + info[0])
             #(257,301)F-Tの順番を(301,257)T-Fに転置
             y[i,] = y_trans.T
+
             #ふたりのマスクを予測する
             #for j in range(2):
             #    y[i, :, :, :, j] = np.load(self.database_dir_path+'/crm/' + info[j + 1])
 
         return X, y
 
+class DataGenerator_highFreq(keras.utils.Sequence):
+    'Generates data for Keras'
+    def __init__(self, filename, database_dir_path, Xdim=(75, 1, 1792), ydim=(301, 257), batch_size=4, shuffle=True):
+        'Initialization'
+        self.filename = filename
+        self.Xdim = Xdim
+        self.ydim = ydim
+        self.batch_size = batch_size
+        self.shuffle = shuffle
+        self.on_epoch_end()
+        self.database_dir_path = database_dir_path
+
+    def __len__(self):
+        'Denotes the number of batches per epoch'
+        return int(np.floor(len(self.filename) / self.batch_size))
+    #おそらくここで定義されたデータを返す
+    def __getitem__(self, index):
+        'Generate one batch of data'
+        # Generate indexes of the batch
+        indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
+
+        # Find list
+        filename_temp = [self.filename[k] for k in indexes] #index 4個分を返す
+
+        # Generate data
+        X, y = self.__data_generation(filename_temp)
+
+        return X, y
+
+    def on_epoch_end(self):
+        'Updates indexes after each epoch'
+        self.indexes = np.arange(len(self.filename))
+        if self.shuffle:
+            np.random.shuffle(self.indexes)
+    
+    def __data_generation(self, filename_temp):
+        'Generates data containing batch_size samples'
+        # Initialization
+        X = np.empty((self.batch_size, *self.Xdim))
+        y = np.empty((self.batch_size, *self.ydim))
+
+        # Generate data
+        for i, ID in enumerate(filename_temp):
+            info = ID.strip().split(' ')
+            X[i,] = np.load(self.database_dir_path+'video/face1022_emb/' + info[1])
+            y_trans = np.load(self.database_dir_path+'audio/AV_model_database/single/' + info[0])
+            
+            #周波数軸100以上の要素を1.5倍
+            y_trans[100:257,:] = y_trans[100:257,:] * 1.5
+            #1以上の値は全て1までに収める
+            y_trans = np.where(y_trans <= 1, y_trans, 1) 
+            
+            #(257,301)F-Tの順番を(301,257)T-Fに転置
+            y[i,] = y_trans.T
+        return X, y
 
 class AudioGenerator(keras.utils.Sequence):
     'Generates data for Keras'
