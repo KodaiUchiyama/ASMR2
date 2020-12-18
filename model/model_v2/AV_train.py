@@ -1,11 +1,12 @@
 import sys
 sys.path.append('../lib')
 #import model_AV_new as AV
-import model_VO_new as VO
+import model_VO_amp as VO
 from model_ops import ModelMGPU,latest_file
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, Callback
 from keras.models import Model, load_model
 from MyGenerator import DataGenerator
+from MyGenerator import DataGenerator_highFreq
 from keras.callbacks import TensorBoard
 from keras import optimizers
 import os
@@ -19,7 +20,7 @@ RESTORE = False
 # needed change 1:h5 file name, 2:epochs num, 3:initial_epoch
 
 # super parameters
-people_num = 4
+experiment_ver = 24
 epochs = 100
 initial_epoch = 0
 batch_size = 4 # 4 to feed one 16G GPU
@@ -41,7 +42,7 @@ folder = os.path.exists(path)
 if not folder:
     os.makedirs(path)
     print('create folder to save models')
-filepath = path + "/AVmodel-" + str(people_num) + "p-{epoch:03d}-{val_loss:.5f}.h5"
+filepath = path + "/AVmodel-" + str(experiment_ver) + "p-{epoch:03d}-{val_loss:.5f}.h5"
 # period=1 オプション1epoch ごとに保存する
 checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 
@@ -49,13 +50,14 @@ checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_
 #############################################################
 # automatically change lr
 def scheduler(epoch):
-    #ini_lr = 0.00001 #adam
-    ini_lr = 0.01 #sgd
+    #ini_lr = 0.00001 #adam original
+    ini_lr = 0.0001 #adam
+    #ini_lr = 0.01 #sgd
     lr = ini_lr
     if epoch >= 5:
-        lr = ini_lr / 5
+        lr = ini_lr / 1
     if epoch >= 10:
-        lr = ini_lr / 10
+        lr = ini_lr / 1
     return lr
 
 rlr = LearningRateScheduler(scheduler, verbose=1)
@@ -77,10 +79,17 @@ if RESTORE:
     info = latest_file.strip().split('-')
     initial_epoch = int(info[-2])
 else:
-    VO_model = VO.VO_model()
+    #VO_model = VO.VO_model()
+    
+    #高周波数域を再学習させるため，以下でモデルをロード
+    print("Loading..trained model.")
+    VO_model = load_model(path+'/AVmodel-17p-022-0.01356.h5',custom_objects={"tf": tf})
+    print("Loading..Done..")
 
-train_generator = DataGenerator(trainfile,database_dir_path= database_dir_path, batch_size=batch_size, shuffle=True)
-val_generator = DataGenerator(valfile,database_dir_path=database_dir_path, batch_size=batch_size, shuffle=True)
+#train_generator = DataGenerator(trainfile,database_dir_path= database_dir_path, batch_size=batch_size, shuffle=True)
+train_generator = DataGenerator_highFreq(trainfile,database_dir_path= database_dir_path, batch_size=batch_size, shuffle=True)
+#val_generator = DataGenerator(valfile,database_dir_path=database_dir_path, batch_size=batch_size, shuffle=True)
+val_generator = DataGenerator_highFreq(valfile,database_dir_path=database_dir_path, batch_size=batch_size, shuffle=True)
 
 if NUM_GPU > 1:
     parallel_model = ModelMGPU(AV_model,NUM_GPU)
@@ -97,13 +106,13 @@ if NUM_GPU > 1:
                            initial_epoch=initial_epoch
                            )
 if NUM_GPU <= 1:
-    #adam = optimizers.Adam()
+    adam = optimizers.Adam()
     sgd = optimizers.SGD()
     #loss = audio_loss(gamma=gamma_loss,beta=beta_loss, num_speaker=people_num)
     loss = 'mean_squared_error'
-    VO_model.compile(optimizer=sgd, loss=loss)
+    #loss = 'mean_absolute_error'
+    VO_model.compile(optimizer=adam, loss=loss)
     print(VO_model.summary())
-    exit()
     VO_model.fit_generator(generator=train_generator,
                            validation_data=val_generator,
                            epochs=epochs,
