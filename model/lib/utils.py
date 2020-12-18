@@ -102,7 +102,8 @@ def sigmoid(x):
 
 def logit(p):
     ones = np.ones(p.shape)
-    ones = ones + 10**-7
+    p = np.where(p < 0, 0+10**-7, p)
+    #ones = ones + 10**-7 これはp=1の時にしか意味がない，かつp=1になることはほぼない
     return np.log(p / (ones - p))
 
 #instead of boxcox, to make the amp distribute more gaussian dist

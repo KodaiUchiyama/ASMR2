@@ -21,14 +21,9 @@ people_num = 2
 NUM_GPU = 1
 
 # PATH
-#model_path = './saved_AV_models/AVmodel-14p-025-0.01321.h5'
-model_path = './saved_AV_models/AVmodel-17p-022-0.01356.h5'
-#model_path = './saved_AV_models/AVmodel-15p-011-0.06611.h5'
-
-#dir_path = './Predicted_wav/'
-dir_path = './Retrieved_predicted_wav/'
-if not os.path.isdir(dir_path):
-    os.mkdir(dir_path)
+model_path = './saved_AV_models/AVmodel-14p-025-0.01321.h5'
+#model_path = './saved_AV_models/AVmodel-17p-022-0.01356.h5'
+#model_path = './saved_AV_models/AVmodel-23p-006-0.01638.h5'
 
 database_path = '../../data/audio/AV_model_database_test/single/'
 face_path = '../../data/video/face1022_emb_test/'
@@ -69,14 +64,14 @@ def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
     plt.imshow(innormalized_spec, aspect='auto',vmin=0.0,vmax=1.0)# (pred_idx:end_idx , 42) > (42 , pred_idx:end_idx)
     plt.title('Predicted feature')
     plt.ylabel('Frequency bands')
-    plt.xlabel('Time (frames)')
+    plt.xlabel('Time')
     plt.colorbar()
 
     plt.subplot(2, 1, 2)
     plt.imshow(spectrogram_feature, aspect='auto', vmin=-0.0, vmax=1.0)
     plt.title('Ground Truth')
     plt.ylabel('Frequency bands')
-    plt.xlabel('Time (frames)')
+    plt.xlabel('Time')
     plt.colorbar()
 
     plt.tight_layout()#図の調整
@@ -97,7 +92,7 @@ def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
 AV_model = load_model(model_path,custom_objects={"tf": tf})
 #print(AV_model.summary())
 counter = 0
-iteration_num = 200
+iteration_num = 500
 if NUM_GPU <= 1:
     for line in testfiles:
         print('processing : %s'%line)
@@ -109,23 +104,38 @@ if NUM_GPU <= 1:
 
         name, face_emb_feature, spectrogram_feature = parse_X_data(line)
         predicted_spec = AV_model.predict(face_emb_feature)
+         
+        #予測したスペクトルグラムを保存
+        # フォルダの作成
+        folder = 'Predicted_Spectrogram'
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+        np.save('./%s/%s.npy'%(folder,name),predicted_spec[0,:].T) # (257,301) 
         
         #print("sigmoid_array")
         #print("sigmoid_array max")
         #print(predicted_spec.max())
         #print("sigmoid_array min")
         #print(predicted_spec.min())
-        
-        #A# raw_data, spectrogramを描画
+         
+        ##A# raw_data, spectrogramを描画
         #plot_spectrogram(name, predicted_spec[0,:].T, spectrogram_feature) 
         
-        #B# retrieval_the nearest neighbor, spectrogramを描画
-        #retrieve_neighbor(predicted_spec)
-        #args: predicted spectrogram:shape(301,257)
-        retrieved_spectrogram = retrieval_neighbor_v2.retrieve_neighbor(predicted_spec[0,:])
-        plot_spectrogram(name,retrieved_spectrogram.T, spectrogram_feature) 
+        ##B# retrieval_the nearest neighbor, spectrogramを描画
+        ##retrieve_neighbor(predicted_spec)
+        ##args: predicted spectrogram:shape(301,257)
+        retrieved_spectrogram = retrieval_neighbor_v2.retrieve_neighbor(predicted_spec[0,:]).T #(257,301)
+         
+        #retrieveしたスペクトルグラムを保存
+        # フォルダの作成
+        folder = 'Retrieved_Spectrogram'
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+        np.save('./%s/%s.npy'%(folder,name),retrieved_spectrogram) 
+         
+        #plot_spectrogram(name,retrieved_spectrogram.T, spectrogram_feature) 
         
-        #A# sigmoidの逆関数logit関数, log(x+10^-7)のガウス的distributionの逆関数log_dist_inv
+        ##A# sigmoidの逆関数logit関数, log(x+10^-7)のガウス的distributionの逆関数log_dist_inv
         #innormalized_spec = utils.log_dist_inv(utils.logit(predicted_spec[0,:]))
         
         #B# retrieved_specを元のスケールに戻す
@@ -136,35 +146,20 @@ if NUM_GPU <= 1:
         #print(innormalized_spec.max())
         #print("logit_array min")
         #print(innormalized_spec.min())
-        innormalized_spec = innormalized_spec.T #T-Fの順番をF-Tに修正、griffin limで位相復元のため 
+        #innormalized_spec = innormalized_spec.T #T-Fの順番をF-Tに修正、griffin limで位相復元のため 
         
         #Grillin Lim phase generatiion
         y_inv = librosa.griffinlim(innormalized_spec, hop_length=160, window='hann', center=True) 
-        
-        filename = dir_path+name+'.wav'
-        #filename = 'test_euc/'+name+'.wav'
 
+        # File for saving predicted wav data
+        #dir_path = './Predicted_wav/'
+        dir_path = './Retrieved_wav/'
+        if not os.path.isdir(dir_path):
+            os.mkdir(dir_path)
+       
+        filename = dir_path+name+'.wav'
         wavfile.write(filename, 16000, y_inv)
         
         counter += 1
-#if NUM_GPU > 1:
-#    parallel_model = ModelMGPU(AV_model,NUM_GPU)
-#    for line in testfiles:
-#        mix,single_idxs,face_embs = parse_X_data(line)
-#        mix_expand = np.expand_dims(mix, axis=0)
-#        cRMs = parallel_model.predict([mix_expand,face_embs])
-#        cRMs = cRMs[0]
-#        prefix = ""
-#        for idx in single_idxs:
-#            prefix += idx + "-"
-#        for i in range(len(cRMs)):
-#            cRM = cRMs[:,:,:,i]
-#            assert cRM.shape == (298,257,2)
-#            F = utils.fast_icRM(mix,cRM)
-#            T = utils.fast_istft(F,power=False)
-#            filename = dir_path+prefix+str(single_idxs[i])+'.wav'
-#            wavfile.write(filename,16000,T)
-
-
 
 

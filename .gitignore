@@ -27,7 +27,8 @@ data/video/face1022_emb_bak/
 
 model/model_v2/Predicted_feature/
 model/model_v2/pred/
-model/model_v2/output/
+model/model_v2/output_first_exp/
+model/model_v2/output_second_exp/
 
 img/
 README.md

@@ -10,7 +10,7 @@ dir_path = './Marged_output_video/'
 if not os.path.isdir(dir_path):
     os.mkdir(dir_path)
 
-wav_dir = './Retrieved_predicted_wav/'
+wav_dir = './Retrieved_wav/'
 video_dir = '../../data/video/video_test/'
 print('1,wav files directory : %s'%wav_dir)
 print('2,video files directory : %s'%video_dir)
