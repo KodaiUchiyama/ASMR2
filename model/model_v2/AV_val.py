@@ -62,6 +62,7 @@ def parse_X_data(line, face_path=face_path):
 def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
     plt.subplot(2, 1, 1)
     plt.imshow(innormalized_spec, aspect='auto',vmin=0.0,vmax=1.0)# (pred_idx:end_idx , 42) > (42 , pred_idx:end_idx)
+    plt.ylim(0,256)
     plt.title('Predicted feature')
     plt.ylabel('Frequency bands')
     plt.xlabel('Time')
@@ -69,6 +70,7 @@ def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
 
     plt.subplot(2, 1, 2)
     plt.imshow(spectrogram_feature, aspect='auto', vmin=-0.0, vmax=1.0)
+    plt.ylim(0,256)
     plt.title('Ground Truth')
     plt.ylabel('Frequency bands')
     plt.xlabel('Time')
@@ -80,8 +82,8 @@ def plot_spectrogram(name, innormalized_spec, spectrogram_feature):
     #生成されたスペクトログラムと正解値スペクトログラムを比較表示、保存
     # フォルダの作成
     # make output directory
-    folder = 'Retrieved_predicted_feature/'
-    #folder = 'Predicted_feature/'
+    #folder = 'Retrieved_feature_fig/'
+    folder = 'Predicted_feature_fig/'
     if not os.path.exists(folder):
         os.makedirs(folder)
     plt.savefig(folder + "predicted_spectrums-%s.png"%name)  # ../graphs/predicted_spectrums/{lr:0.000597}-{ws:0.000759}/1.png
@@ -104,56 +106,47 @@ if NUM_GPU <= 1:
 
         name, face_emb_feature, spectrogram_feature = parse_X_data(line)
         predicted_spec = AV_model.predict(face_emb_feature)
-         
+        '''  
         #予測したスペクトルグラムを保存
         # フォルダの作成
         folder = 'Predicted_Spectrogram'
         if not os.path.exists(folder):
             os.makedirs(folder)
         np.save('./%s/%s.npy'%(folder,name),predicted_spec[0,:].T) # (257,301) 
-        
-        #print("sigmoid_array")
-        #print("sigmoid_array max")
-        #print(predicted_spec.max())
-        #print("sigmoid_array min")
-        #print(predicted_spec.min())
+        ''' 
          
         ##A# raw_data, spectrogramを描画
-        #plot_spectrogram(name, predicted_spec[0,:].T, spectrogram_feature) 
+        plot_spectrogram(name, predicted_spec[0,:].T, spectrogram_feature) 
         
         ##B# retrieval_the nearest neighbor, spectrogramを描画
         ##retrieve_neighbor(predicted_spec)
         ##args: predicted spectrogram:shape(301,257)
-        retrieved_spectrogram = retrieval_neighbor_v2.retrieve_neighbor(predicted_spec[0,:]).T #(257,301)
-         
+        #retrieved_spectrogram = retrieval_neighbor_v2.retrieve_neighbor(predicted_spec[0,:]).T #(257,301)
+        
+        '''
         #retrieveしたスペクトルグラムを保存
         # フォルダの作成
         folder = 'Retrieved_Spectrogram'
         if not os.path.exists(folder):
             os.makedirs(folder)
         np.save('./%s/%s.npy'%(folder,name),retrieved_spectrogram) 
-         
+        ''' 
         #plot_spectrogram(name,retrieved_spectrogram.T, spectrogram_feature) 
         
         ##A# sigmoidの逆関数logit関数, log(x+10^-7)のガウス的distributionの逆関数log_dist_inv
-        #innormalized_spec = utils.log_dist_inv(utils.logit(predicted_spec[0,:]))
+        innormalized_spec = utils.log_dist_inv(utils.logit(predicted_spec[0,:]))
         
         #B# retrieved_specを元のスケールに戻す
-        innormalized_spec = utils.log_dist_inv(utils.logit(retrieved_spectrogram))
+        #innormalized_spec = utils.log_dist_inv(utils.logit(retrieved_spectrogram))
         
-        #print("logit_array")
-        #print("logit_array max")
-        #print(innormalized_spec.max())
-        #print("logit_array min")
-        #print(innormalized_spec.min())
         #innormalized_spec = innormalized_spec.T #T-Fの順番をF-Tに修正、griffin limで位相復元のため 
         
-        #Grillin Lim phase generatiion
+        #Grillin Lim phase generatiion 入力はF-T (257,301)にする
         y_inv = librosa.griffinlim(innormalized_spec, hop_length=160, window='hann', center=True) 
 
         # File for saving predicted wav data
-        #dir_path = './Predicted_wav/'
-        dir_path = './Retrieved_wav/'
+        dir_path = './Predicted_wav/'
+        #dir_path = './Retrieved_wav/'
         if not os.path.isdir(dir_path):
             os.mkdir(dir_path)
        
@@ -161,5 +154,4 @@ if NUM_GPU <= 1:
         wavfile.write(filename, 16000, y_inv)
         
         counter += 1
-
 
