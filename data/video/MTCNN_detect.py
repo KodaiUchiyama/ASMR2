@@ -4,12 +4,11 @@ import pandas as pd
 import os
 import glob
 
-cat_train = pd.read_csv('../audio/catalog/avspeech_train.csv')#not using
-frame_path = './frames_test/'
-output_dir = './face_input_test'
+frame_path = './frames_expanded_test/'
+output_dir = './face_input_expanded_test'
 #invalid_frame_path = 'invalid_frame2.txt'
-segment_num_list = 'segment_num_list_test.csv'
-detect_range = (0,2)
+segment_num_list = 'segment_num_list_expanded_test.csv'
+detect_range = (0,10)
 
 if not os.path.isdir(output_dir):
     os.mkdir(output_dir)
@@ -34,12 +33,12 @@ def bounding_box_check(faces):
         #    continue
         return bounding_box
 
-def face_detect(file,detector,frame_path=frame_path,cat_train=cat_train):
+def face_detect(file,detector,frame_path=frame_path):
     name = file.replace('.jpg', '').rsplit('-',1)
-    #log = cat_train.iloc[int(name[0])] #name[0]= %d of "%d-%02d.jpg"
     #x = log['pos_x'] #Where the X,Y coordinates mark the center point of the speaker's face in the frame at the beginning of the segment(3s video)
     #y = log['pos_y']
-
+    
+    # 通常フレームload
     img = cv2.imread('%s%s'%(frame_path,file))
     #x = img.shape[1] * x #the X,Y coordinates are normalised
     #y = img.shape[0] * y
@@ -60,7 +59,7 @@ def face_detect(file,detector,frame_path=frame_path,cat_train=cat_train):
     #print(file," ",x, y)
     crop_img = img[bounding_box[1]:bounding_box[1] + bounding_box[3],bounding_box[0]:bounding_box[0]+bounding_box[2]]
     crop_img = cv2.resize(crop_img,(160,160))
-    cv2.imwrite('%s/frame_'%output_dir + name[0] + '_' + name[1] + '.jpg', crop_img)
+    cv2.imwrite('%s/frame_'%output_dir + name[0] + '_' + name[1] + '.jpg', crop_img) #face_input/frame_0-14_15.jpg
     #crop_img = cv2.cvtColor(crop_img, cv2.COLOR_BGR2RGB)
     #plt.imshow(crop_img)
     #plt.show()
@@ -75,6 +74,7 @@ for i in range(detect_range[0],detect_range[1]):
         #0-1,0-2,,のセグメントの数ループ
         for j in range(1,76):
             file_name = "%s-%s-%02d.jpg"%(i ,counter ,j)#ex)0-0-57.jpg
+            # 25fps分割された各フレームが存在するかチェック
             if (not os.path.exists('%s%s' % (frame_path, file_name))):
                 print('cannot find input: ' + '%s%s' % (frame_path, file_name))
                 continue
@@ -84,6 +84,6 @@ for i in range(detect_range[0],detect_range[1]):
         counter+=1
     #各動画に3sのセグメントがいくつあるかを記録
     with open(segment_num_list,'a') as l:
-        l.write('%d,%d\n'%(i,counter-1)) 
+        l.write('%d,%d\n'%(i,counter-1)) #NOTE:counterが最後に1インクリメントするから -1する 
 
 

@@ -17,11 +17,11 @@ HDF5 = 1
 #MODEL_PATH = 'FaceNet_keras/facenet_keras.h5'
 MODEL_PATH = '/home/kody.uchiyama/keras-facenet/model/facenet_keras.h5'
 #input
-VALID_FRAME_LOG_PATH = '../../data/video/valid_frame_test.txt'
-FACE_INPUT_PATH = '../../data/video/face_input_test/'
+VALID_FRAME_LOG_PATH = '../../data/video/valid_frame_expanded_test.txt'
+FACE_INPUT_PATH = '../../data/video/face_input_expanded_test/'
 #output
-OUTPUT_TXT_FILE='faceemb_dataset_test.txt'
-SAVE_PATH = './face1022_emb_test/' 
+OUTPUT_TXT_FILE='faceemb_dataset_expanded_test.txt'
+SAVE_PATH = './face1022_emb_expanded_test/' 
 
 data = np.random.randint(256,size=(1,160,160,3),dtype='int32')
 
@@ -58,7 +58,7 @@ if HDF5:
 
     for line in lines:
         embtmp = np.zeros((75, 1, 1792))
-        headname = line.strip() #ex) frame_0-1
+        headname = line.strip() #ex) frame_0-1 from log for face_input
         tailname = ''
         for i in range(1, 76):
             if i < 10:
@@ -77,15 +77,11 @@ if HDF5:
 
         # print(embtmp.shape)
         frame_index = line.strip().split('_')[1]
-        npname = '%s_face_emb.npy'%frame_index
+        npname = '%s_face_emb.npy'%frame_index #0-0_face_emb.npy
         print(npname)
 
         np.save(SAVE_PATH + npname, embtmp)
         with open(OUTPUT_TXT_FILE, 'a') as d:
             d.write(npname + '\n')
-
-
-
-
 
 

@@ -12,12 +12,12 @@ import math
 import scipy.io.wavfile as wavfile
 
 # Parameter
-SAMPLE_RANGE = (0,2) # data usage to generate database
-WAV_REPO_PATH = os.path.expanduser("./norm_audio_test")
+SAMPLE_RANGE = (0,10) # data usage to generate database
+WAV_REPO_PATH = os.path.expanduser("./norm_audio_expanded_test")
 WAV_FILE_NAME = "trim_audio_train"
-DATABASE_REPO_PATH = 'AV_model_database_test'
-FRAME_LOG_PATH = '../video/valid_frame_test.txt'
-segment_num_list = pd.read_csv('../video/segment_num_list_test.csv')
+DATABASE_REPO_PATH = 'AV_model_database_expanded_test'
+FRAME_LOG_PATH = '../video/valid_frame_expanded_test.txt'
+segment_num_list = pd.read_csv('../video/segment_num_list_expanded_test.csv')
 NUM_SPEAKER = 2
 MAX_NUM_SAMPLE = 50000
 
@@ -51,7 +51,6 @@ def init_dir(path = DATABASE_REPO_PATH ):
 @timit
 def generate_path_list(sample_range=SAMPLE_RANGE,repo_path=WAV_REPO_PATH,frame_path=FRAME_LOG_PATH):
     '''
-
     :param sample_range:
     :param repo_path:
     :return: 2D array with idx and path (idx_wav,path_wav)
@@ -86,9 +85,15 @@ def single_audio_to_npy(audio_path_list,database_repo=DATABASE_REPO_PATH,fix_sr=
         print('\rsingle npy generating... %d'%(((idx+1)/len(audio_path_list))*100),end='')
         data, _ = librosa.load(path, sr=fix_sr)
         data = utils.fast_stft_amplitude(data)
-        #
-        #name = 'single-%05d'%idx
-        name = path.rsplit("/",1)[1].split("n")[1].replace(".wav","")
+        
+        name = path.rsplit("/",1)[1].split("n")[1].replace(".wav","") #0-0
+        # 交差検証を行うためtestデータの名称が，trainデータと重複するしているのを修正する
+        # video index 0->9 を 35->44に変更
+        num1Str = name.split('-')[0]
+        num2Str = name.split('-')[1]
+        #string をint変換して足す
+        num1Str = str(int(num1Str) + 35)
+        name = num1Str +'-'+ num2Str
         with open('%s/single_TF.txt'%database_repo,'a') as f:
             f.write('%s.npy'%name)
             f.write('\n')

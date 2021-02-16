@@ -38,7 +38,12 @@ model/model_v2/output_first_exp/
 model/model_v2/output_second_exp/
 model/model_v2/output_third_exp/
 model/model_v2/output_fourth_exp/
+model/model_v2/log_AV/
+model/model_v2/saved_AV_models/
 
 img/
 README.md
 LICENSE
+
+model/Kfolds_exp/result/
+model/Kfolds_exp/saved_Kfolds_models/

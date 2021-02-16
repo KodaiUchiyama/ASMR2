@@ -55,7 +55,7 @@ def download_video_frames(loc,cat,output_file,start_idx,end_idx,rm_video):
     # end_idx    | the ending index of the video to download
     # rm_video   | boolean value for delete video and only keep the frames
 
-    #avh.mkdir(output_file)
+    avh.mkdir(output_file)
     for i in range(start_idx, end_idx):
         command = 'cd %s;' % loc
         f_name = str(i)
@@ -90,7 +90,7 @@ def download_video_frames(loc,cat,output_file,start_idx,end_idx,rm_video):
             
             #converts to frames
             #「-vf」(video filter)オプション
-            #command2 += 'ffmpeg -i %s.mp4 -vf fps=25 ../%s/%s-%%02d.jpg;' % (segment_video_name,output_file, segment_video_name)
+            command2 += 'ffmpeg -i %s.mp4 -vf fps=25 ../%s/%s-%%02d.jpg;' % (segment_video_name,output_file, segment_video_name)
             
             #increment start_time_sec
             start_time_sec = start_time_sec + 3
@@ -103,10 +103,10 @@ def download_video_frames(loc,cat,output_file,start_idx,end_idx,rm_video):
             os.system("rm ./%s/%s.mp4"%(loc,f_name))
 
 #avh.mkdir('video_train')
-avh.mkdir('video_test')
+avh.mkdir('video_expanded_test')
 #cat_train = pd.read_csv('../audio/catalog/avspeech_train.csv')
-cat_test = pd.read_csv('../audio/catalog/avspeech_test.csv')
-output_file = 'frames_test'
+cat_test = pd.read_csv('../audio/catalog/avspeech_expanded_test.csv')
+output_file = 'frames_expanded_test'
 
 # download video , convert to images separately
 #avh.video_download(loc='video_train',v_name='video_train',cat=cat_train,start_idx=2,end_idx=4)
@@ -114,4 +114,4 @@ output_file = 'frames_test'
 
 # download each video and convert to frames immediately
 #download_video_frames(loc='video_train',cat=cat_train,start_idx=33,end_idx=35,rm_video=True)
-download_video_frames(loc='video_test',cat=cat_test, output_file=output_file, start_idx=0,end_idx=2,rm_video=True)
+download_video_frames(loc='video_expanded_test',cat=cat_test, output_file=output_file, start_idx=0,end_idx=10,rm_video=True)
